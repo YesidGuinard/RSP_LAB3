@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>RSP Lab3 Yesid Guinard</title>
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./js/Persona.js"></script>
+    <script src="./js/Cliente.js"></script>
+    <script src="./js/App.js"></script>
+</head>
+<body>
+<header>
+    <button class="btn btn-outline-success" type="button" id="formAltaShow" onclick="RSP2.App.showFormAlta()">
+        Alta Persona
+    </button>
+    <button class="btn btn-outline-secondary" type="button" id="mockLoad" onclick="RSP2.App.mockVehiculos()">Mock
+        Personas
+    </button>
+    <button class="btn btn-outline-secondary" type="button" id="clearStorage" onclick="RSP2.App.clearStorage()">
+        Limpiar Local Storage
+    </button>
+    <button class="btn btn-outline-secondary" style="color: blue;" type="button" id="calcPromedio"
+            onclick="RSP2.App.CalcularPromedio()">Calcular Promedio
+    </button>
+</header>
+<div id='main'>
+    <article>
+        <div>
+            <hr>
+            <label>Filtrar Por Sexo </label>
+            <select id="selSexoFiltro">
+                <option id="optTodosFilter" value="TODOS">TODOS</option>
+                <option id="optMasculinoFilter" value="Masculino">Masculino</option>
+                <option id="optFemeninoFilter" value="Femenino">Femenino</option>
+            </select>
+            <div>
+                <label>Filtrar Por Nombre</label>
+                <input type="text" id="txtNombreFilter"><br>
+
+            </div>
+        </div>
+
+        <div>
+            <hr>
+            <label><b>Campos Mostrados</b> Tildar los campos a mostrar.</label>
+
+        </div>
+        <div>
+
+            <label>
+                <input type="checkbox" name="mostrarID" id="mostrarID" checked disabled value="Id"
+                       class="chk">ID</label>
+            <label>
+                <input type="checkbox" name="mostrarNombre" id="mostrarNombre" checked value="Nombre"
+                       class="chk">Nombre</label>
+            <label>
+                <input type="checkbox" name="mostrarApellido" id="mostrarApellido" checked value="Apellido" class="chk">Apellido</label>
+            <label>
+                <input type="checkbox" name="mostrarEdad" id="mostrarEdad" checked value="Edad" class="chk">Edad</label>
+            <label>
+                <input type="checkbox" name="mostrarSexo" id="mostrarSexo" checked value="Sexo" class="chk">Sexo</label>
+
+            <label>
+                <input type="checkbox" name="mostrarAccion" id="mostrarAccion" checked
+                       value="Accion" class="chk">Accion</label>
+            <hr>
+        </div>
+
+        <div>
+            <label for="tabla"><b>Lista de Personas</b></label>
+            <table id="tabla">
+
+            </table>
+        </div>
+
+    </article>
+    <nav>
+        <div class="divContainer" id="divAlta">
+            <div class="divForm">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="header2">Alta Persona</h2>
+
+                </div>
+                <div class="form-body">
+                    <label>Id</label>
+                    <input type="text" disabled="disabled" id="txtId"><br>
+                    <label>Nombre</label>
+                    <input type="text" id="txtNombre"><br>
+                    <label>Apellido</label>
+                    <input type="text" id="txtApellido"><br>
+                    <label>Edad</label>
+                    <input type="number" id="txtEdad"><br>
+                    <label>Sexo</label>
+                    <select id="selSexo"> </select>
+
+                </div>
+                <div class="modal-footer">
+                    <button id="btnAgregar" type="button" class="btn btn-outline-success"
+                            onclick="RSP2.App.getAndValidateInputValues()">Guardar
+                    </button>
+                    <button id="btnCancelar" type="button" class="btn btn-outline-secondary"
+                            onclick="RSP2.App.btnCancelar()">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</div>
+<footer>RSP Lab3 Yesid Dario Guinard</footer>
+</body>
+</html>
