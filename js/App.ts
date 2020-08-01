@@ -186,19 +186,36 @@ namespace RSP2 {
         }
 
 
-        public static CalcularPromedio() {
+        private static CalcularPromedio(result: any, rechazado: any) {
             let listaFiltrada: Array<Persona> = App.obtenerListaFiltrada();
-
             let Acumulador: number = listaFiltrada.reduce(function (total, persona, i, array) {
                 return total += (<Cliente>persona).getEdad();
             }, 0);
 
             let promedio: number = 0;
-            if (listaFiltrada.length > 0)
+            if (listaFiltrada.length > 0){
                 promedio = Acumulador / listaFiltrada.length;
-            alert("Precio Promedio es: " + promedio);
+                result(promedio);
+            }else{
+                rechazado("No hay Personas en la lista")
+            }
+
 
         }
+
+        public static promedioPro(){
+            let promesaPromedio = new Promise(App.CalcularPromedio);
+            promesaPromedio.then(
+                (respuestaObtenida) => {
+                    alert("El promedio es: " + respuestaObtenida);
+                                }
+            ).catch(
+                (error) => {
+                    alert("Mjs: " + error);
+                }
+            )
+        }
+
 
         public static filtrosEvent() {
             let arrayChecks = Array.from(document.getElementsByClassName("chk"));

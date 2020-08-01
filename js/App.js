@@ -155,15 +155,27 @@ var RSP2;
             });
             return arrayFiltrado;
         }
-        static CalcularPromedio() {
+        static CalcularPromedio(result, rechazado) {
             let listaFiltrada = App.obtenerListaFiltrada();
             let Acumulador = listaFiltrada.reduce(function (total, persona, i, array) {
                 return total += persona.getEdad();
             }, 0);
             let promedio = 0;
-            if (listaFiltrada.length > 0)
+            if (listaFiltrada.length > 0) {
                 promedio = Acumulador / listaFiltrada.length;
-            alert("Precio Promedio es: " + promedio);
+                result(promedio);
+            }
+            else {
+                rechazado("No hay Personas en la lista");
+            }
+        }
+        static promedioPro() {
+            let promesaPromedio = new Promise(App.CalcularPromedio);
+            promesaPromedio.then((respuestaObtenida) => {
+                alert("El promedio es: " + respuestaObtenida);
+            }).catch((error) => {
+                alert("Mjs: " + error);
+            });
         }
         static filtrosEvent() {
             let arrayChecks = Array.from(document.getElementsByClassName("chk"));
