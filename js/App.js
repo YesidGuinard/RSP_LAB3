@@ -125,14 +125,12 @@ var RSP2;
             select.appendChild(opcion2);
         }
         static filtrarBySexo(sexo) {
-            console.log("sexo antes filter", sexo);
             if (sexo === RSP2.Sexo.todos) {
                 return App.personas;
             }
             else {
                 let listAux = App.personas.filter(function (persona) {
                     if (persona.getSexo() == sexo) {
-                        console.log("sexo inside filter", sexo);
                         return true;
                     }
                 });
@@ -154,20 +152,6 @@ var RSP2;
                 return false;
             });
             return arrayFiltrado;
-        }
-        static CalcularPromedio(result, rechazado) {
-            let listaFiltrada = App.obtenerListaFiltrada();
-            let Acumulador = listaFiltrada.reduce(function (total, persona, i, array) {
-                return total += persona.getEdad();
-            }, 0);
-            let promedio = 0;
-            if (listaFiltrada.length > 0) {
-                promedio = Acumulador / listaFiltrada.length;
-                result(promedio);
-            }
-            else {
-                rechazado("No hay Personas en la lista");
-            }
         }
         static promedioPro() {
             let promesaPromedio = new Promise(App.CalcularPromedio);
@@ -197,6 +181,20 @@ var RSP2;
             App.resetValuesForm();
             document.getElementById("btnAgregar").textContent = "Guardar";
             document.getElementById("header2").textContent = "Alta Persona";
+        }
+        static CalcularPromedio(result, rechazado) {
+            let listaFiltrada = App.obtenerListaFiltrada();
+            let Acumulador = listaFiltrada.reduce(function (total, persona, i, array) {
+                return total += persona.getEdad();
+            }, 0);
+            let promedio = 0;
+            if (listaFiltrada.length > 0) {
+                promedio = Acumulador / listaFiltrada.length;
+                result(promedio);
+            }
+            else {
+                rechazado("No hay Personas en la lista");
+            }
         }
         static obtenerListaFiltrada() {
             let sexoOpt = document.getElementById("selSexoFiltro").value;

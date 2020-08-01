@@ -146,7 +146,6 @@ namespace RSP2 {
         }
 
         public static filtrarBySexo(sexo: Sexo): Array<Persona> {
-            console.log("sexo antes filter", sexo);
 
             if (sexo === RSP2.Sexo.todos) {
                 return App.personas;
@@ -154,16 +153,13 @@ namespace RSP2 {
 
                 let listAux = App.personas.filter(function (persona: Persona) {
                     if ((<Cliente>persona).getSexo() == sexo) {
-                        console.log("sexo inside filter", sexo);
                         return true;
                     }
-
                 });
-
                 return listAux;
             }
-
         }
+
 
         public static clearStorage() {
             localStorage.clear();
@@ -185,37 +181,18 @@ namespace RSP2 {
 
         }
 
-
-        private static CalcularPromedio(result: any, rechazado: any) {
-            let listaFiltrada: Array<Persona> = App.obtenerListaFiltrada();
-            let Acumulador: number = listaFiltrada.reduce(function (total, persona, i, array) {
-                return total += (<Cliente>persona).getEdad();
-            }, 0);
-
-            let promedio: number = 0;
-            if (listaFiltrada.length > 0){
-                promedio = Acumulador / listaFiltrada.length;
-                result(promedio);
-            }else{
-                rechazado("No hay Personas en la lista")
-            }
-
-
-        }
-
-        public static promedioPro(){
+        public static promedioPro() {
             let promesaPromedio = new Promise(App.CalcularPromedio);
             promesaPromedio.then(
                 (respuestaObtenida) => {
                     alert("El promedio es: " + respuestaObtenida);
-                                }
+                }
             ).catch(
                 (error) => {
                     alert("Mjs: " + error);
                 }
             )
         }
-
 
         public static filtrosEvent() {
             let arrayChecks = Array.from(document.getElementsByClassName("chk"));
@@ -236,13 +213,28 @@ namespace RSP2 {
 
         }
 
-
         public static btnCancelar() {
             App.resetValuesForm();
             (<HTMLButtonElement>document.getElementById("btnAgregar")).textContent = "Guardar";
             (<HTMLButtonElement>document.getElementById("header2")).textContent = "Alta Persona";
         }
 
+        private static CalcularPromedio(result: any, rechazado: any) {
+            let listaFiltrada: Array<Persona> = App.obtenerListaFiltrada();
+            let Acumulador: number = listaFiltrada.reduce(function (total, persona, i, array) {
+                return total += (<Cliente>persona).getEdad();
+            }, 0);
+
+            let promedio: number = 0;
+            if (listaFiltrada.length > 0) {
+                promedio = Acumulador / listaFiltrada.length;
+                result(promedio);
+            } else {
+                rechazado("No hay Personas en la lista")
+            }
+
+
+        }
 
         private static obtenerListaFiltrada(): Array<Persona> {
             let sexoOpt = (<HTMLInputElement>document.getElementById("selSexoFiltro")).value;
