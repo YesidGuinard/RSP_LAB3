@@ -4,73 +4,32 @@ namespace RSP2 {
 
         private static personas: Array<Persona> = new Array<Persona>();
 
-        public static hideFormAlta(): void {
-            let divAlta = document.getElementById('divAlta');
-            if (divAlta != null) {
-                divAlta.hidden = true;
-            }
-        }
 
         public static showFormAlta(): void {
-            let divAlta = document.getElementById('divAlta');
-            let divAuto = document.getElementById("contenedorAuto");
-            let divCheck = <HTMLInputElement>document.getElementById('contenedorCamioneta');
-            let tipo = <HTMLInputElement>document.getElementById("selTipo");
-            let select4x4 = <HTMLInputElement>document.getElementById("is4x4");
+
+            let sexo = <HTMLInputElement>document.getElementById("selSexo");
             (<HTMLButtonElement>document.getElementById("header2")).textContent = "Alta Persona";
             (<HTMLButtonElement>document.getElementById("btnAgregar")).textContent = "Guardar";
-            if (divAlta != null && divAuto != null) {
-                divAlta.hidden = false;
-                divAuto.hidden = false;
-                select4x4.checked = false;
-                divCheck.hidden = true;
-                tipo.value = "Cliente";
-                App.resetValuesForm();
-            }
-        }
+            sexo.value = RSP2.Sexo.femenino;
+            App.resetValuesForm();
 
-        public static showCheck4x4(): void {
-            let divCheck = document.getElementById('contenedorCamioneta');
-            let divPuertas = document.getElementById('contenedorAuto');
-            if (divCheck != null && divPuertas != null) {
-                divCheck.hidden = false;
-                divPuertas.hidden = true;
-            }
-        }
-
-        public static hideCheck4x4(): void {
-            let divCheck = document.getElementById('contenedorCamioneta');
-            let divPuertas = document.getElementById('contenedorAuto');
-            if (divCheck != null && divPuertas != null) {
-                divCheck.hidden = true;
-                divPuertas.hidden = false;
-            }
-        }
-
-        public static controlDivTipo(): void {
-            let tipo = <HTMLInputElement>document.getElementById("selTipo");
-            if (tipo != null && tipo.value == "Cliente") {
-                App.hideCheck4x4();
-            } else if (tipo != null && tipo.value == "Camioneta") {
-                App.showCheck4x4();
-            }
         }
 
         public static resetValuesForm(): void {
             let id = <HTMLInputElement>document.getElementById('txtId');
-            let nombre = <HTMLInputElement>document.getElementById('txtMarca');
-            let apellido = <HTMLInputElement>document.getElementById("txtModelo");
-            let precio = <HTMLInputElement>document.getElementById("txtPrecio");
-            let ctdPuertas = <HTMLInputElement>document.getElementById("cantPuertas");
+            let nombre = <HTMLInputElement>document.getElementById('txtNombre');
+            let apellido = <HTMLInputElement>document.getElementById("txtApellido");
+            let edad = <HTMLInputElement>document.getElementById("txtEdad");
+            let sexo = <HTMLInputElement>document.getElementById("selSexo");
             id.value = "";
             nombre.value = "";
             nombre.className = "sinError";
             apellido.value = "";
             apellido.className = "sinError";
-            precio.valueAsNumber = 0;
-            precio.className = "sinError";
-            ctdPuertas.valueAsNumber = 0;
-            ctdPuertas.className = "sinError";
+            edad.valueAsNumber = 0;
+            edad.className = "sinError";
+            sexo.value = RSP2.Sexo.femenino;
+
         }
 
         public static getAndValidateInputValues(): void {
@@ -93,7 +52,6 @@ namespace RSP2 {
 
             if (sexOpt == "Femenino")
                 sexo = RSP2.Sexo.femenino;
-
 
             if (nombre.length < 3) {
                 nombreTxt.className = "error";
@@ -121,15 +79,14 @@ namespace RSP2 {
 
                 let persona: Persona;
                 let btnValGuardar: boolean = (<HTMLButtonElement>document.getElementById("btnAgregar")).textContent == "Guardar";
-
                 persona = new Cliente(App.buscarId(), nombre, apellido, edad, sexo);
-
 
                 if (btnValGuardar) {
                     App.LocalStorage(persona);
                 } else {
                     persona.setId(id);
                     App.LocalStorage(persona, true, id);
+                    App.showFormAlta();
                 }
 
                 // App.hideFormAlta();
@@ -144,16 +101,12 @@ namespace RSP2 {
             let mujeres: string[] = ["Macarena", "Claudia", "Lorena", "Mercedez"];
             let apellidos: string[] = ["Escuer", "Sarmiento", "Belgrano", "Fernandez", "Peron", "Bolivar", "Lopez", "Ramos"];
             for (let i = 0; i < 2; i++) {
-
                 let hombre: Cliente = new Cliente(App.buscarId(), hombres[App.rnd(0, 3)], apellidos[App.rnd(0, 7)], App.rnd(16, 80), RSP2.Sexo.masculino);
                 App.LocalStorage(hombre);
                 let mujer: Cliente = new Cliente(App.buscarId(), mujeres[App.rnd(0, 3)], apellidos[App.rnd(0, 7)], App.rnd(18, 80), RSP2.Sexo.femenino);
                 App.LocalStorage(mujer);
-
             }
-
             App.filtrosEvent();
-
         }
 
         public static rnd(min: number, max: number): number {
@@ -193,15 +146,20 @@ namespace RSP2 {
         }
 
         public static filtrarBySexo(sexo: Sexo): Array<Persona> {
-            if (sexo == RSP2.Sexo.todos) {
+            console.log("sexo antes filter", sexo);
+
+            if (sexo === RSP2.Sexo.todos) {
                 return App.personas;
             } else {
+
                 let listAux = App.personas.filter(function (persona: Persona) {
                     if ((<Cliente>persona).getSexo() == sexo) {
+                        console.log("sexo inside filter", sexo);
                         return true;
                     }
-                    return false;
+
                 });
+
                 return listAux;
             }
 
@@ -271,19 +229,14 @@ namespace RSP2 {
 
         private static obtenerListaFiltrada(): Array<Persona> {
             let sexoOpt = (<HTMLInputElement>document.getElementById("selSexoFiltro")).value;
-            let sexo: Sexo;
-            switch (sexoOpt) {
-                case "TODOS":
-                    sexo = RSP2.Sexo.todos;
-                    break;
-                case  "Femenino":
-                    sexo = RSP2.Sexo.femenino;
+            let sexo: RSP2.Sexo;
 
-                case "Masculino":
-                    sexo = RSP2.Sexo.masculino;
-                    break;
-                default:
-                    sexo = RSP2.Sexo.todos;
+            if (sexoOpt == "Femenino") {
+                sexo = RSP2.Sexo.femenino;
+            } else if (sexoOpt == "Masculino") {
+                sexo = RSP2.Sexo.masculino;
+            } else {
+                sexo = RSP2.Sexo.todos;
             }
             let listaFitradaByTipo = App.filtrarBySexo(sexo);
             let listaFinal = App.filtrarByNombre(listaFitradaByTipo);
@@ -301,13 +254,13 @@ namespace RSP2 {
 
         }
 
-        private static createTable(chk: Array<string>, vehiculosFtd: Array<Persona>): HTMLElement {
+        private static createTable(chk: Array<string>, personasFtd: Array<Persona>): HTMLElement {
 
             let table = document.createElement("table");
             table.id = "tabla";
             table.appendChild(App.createHeaderTable(chk));
 
-            vehiculosFtd.forEach(function (persona) {
+            personasFtd.forEach(function (persona) {
                 let rowVh = App.createRowTable(chk, persona);
                 table.appendChild(rowVh);
             })
@@ -329,10 +282,7 @@ namespace RSP2 {
             chk.forEach(function (value) {
                 let cell = document.createElement("td");
                 if (value != "Accion") {
-                    if (value == "Caracteristicas")
-                        cell.innerHTML = persona.getProperty(value);
-                    else
-                        cell.appendChild(document.createTextNode(persona.getProperty(value)));
+                    cell.appendChild(document.createTextNode(persona.getProperty(value)));
                 } else if (value == "Accion") {
                     let btnEdit = document.createElement('button');
                     btnEdit.textContent = "Editar";
@@ -353,8 +303,8 @@ namespace RSP2 {
 
         private static LocalStorage(persona: Persona, edita ?: boolean, id ?: number): void {
             if (edita == true && id) {
-                if (App.findVehiculoById(id) != undefined) {
-                    let indiceArray: number = App.findIndexVhArray(App.findVehiculoById(id));
+                if (App.findPersonaById(id) != undefined) {
+                    let indiceArray: number = App.findIndexVhArray(App.findPersonaById(id));
                     App.personas[indiceArray] = persona;
                 }
             } else {
@@ -385,10 +335,11 @@ namespace RSP2 {
         }
 
         private static Borrar(id: number): void {
-            if (App.findVehiculoById(id) != undefined) {
-                let indice: number = App.findIndexVhArray(App.findVehiculoById(id));
+            if (App.findPersonaById(id) != undefined) {
+                let indice: number = App.findIndexVhArray(App.findPersonaById(id));
                 App.personas.splice(indice, 1);
                 localStorage.setItem("listaLS", JSON.stringify(App.personas));
+                App.showFormAlta();
                 App.filtrosEvent();
             } else {
                 alert("Error no se puede Borrar Persona id: " + id);
@@ -397,8 +348,8 @@ namespace RSP2 {
 
         private static Editar(id: number) {
 
-            if (App.findVehiculoById(id) != undefined) {
-                let persona: Persona = App.findVehiculoById(id);
+            if (App.findPersonaById(id) != undefined) {
+                let persona: Persona = App.findPersonaById(id);
                 App.showFormAlta();
                 (<HTMLButtonElement>document.getElementById("header2")).textContent = "Modificar Persona";
                 (<HTMLButtonElement>document.getElementById("btnAgregar")).textContent = "Modificar";
@@ -408,7 +359,6 @@ namespace RSP2 {
                 (<HTMLInputElement>document.getElementById("txtEdad")).value = (<Cliente>persona).getEdad().toString();
                 (<HTMLSelectElement>document.getElementById("selSexo")).value = (<Cliente>persona).getSexo();
 
-
                 App.filtrosEvent();
             }
         }
@@ -417,7 +367,7 @@ namespace RSP2 {
             return App.personas.indexOf(persona);
         }
 
-        private static findVehiculoById(id: number): Persona {
+        private static findPersonaById(id: number): Persona {
             return App.personas.filter(persona => persona.getId() === id)[0];
         }
 
